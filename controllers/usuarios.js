@@ -11,7 +11,7 @@ const obtenerUsuarios = async (req, res) => {
             .limit(Number(limite))
     ]);
 
-    res.json({
+    res.status(200).json({
         total,
         usuarios
     });
@@ -21,12 +21,12 @@ const obtenerUsuario = async (req, res) => {
     const { id } = req.params;
     const usuario = await Usuario.findById(id);
 
-    if (!usuario.estado) {
+/*     if (!usuario.estado) {
         return res.status(400).json({
             ok: false,
             msg: "Usuario se encuentra eliminado"
         });
-    }
+    } */
 
     res.status(200).json({
         ok: true,

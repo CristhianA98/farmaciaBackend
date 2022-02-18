@@ -1,4 +1,4 @@
-const { Rol, Usuario } = require("../models")
+const { Rol, Usuario, Distribuidora } = require("../models")
 
 const esRolValido = async (rol = '') => {
     const existeRol = await Rol.findOne({ rol });
@@ -21,8 +21,37 @@ const esEmailExistente = async (correo = '') => {
 
 const existeUsuarioId = async (id = '') => {
     const usuarioId = await Usuario.findById(id);
-    if(!usuarioId){
+    if (!usuarioId) {
         throw new Error(`ID "${id}" no encontrado`);
+    }
+
+    return true;
+}
+
+
+const verificarNombreRepetido = async (nombre = '', coleccion) => {
+    const existeNombre = await coleccion.findOne({ nombre: nombre.toUpperCase()});
+    if (existeNombre) {
+        throw new Error(`"${nombre}" ya se encuentra registrado`);
+    }
+    return true;
+}
+
+const verificarEstado = async (id, coleccion) => {
+    const { estado, nombre } = await coleccion.findById(id);
+
+    if (!estado) {
+        throw new Error(`"${nombre}" se encuentra en estado Inactivo`);
+    }
+
+    return true;
+}
+
+const existeDisribuidoraId = async (id = '') => {
+    const existeDistribuidora = await Distribuidora.findById(id);
+
+    if(!existeDistribuidora){
+        throw new Error(`Id "${id}" no pertenece a una distribuidora`);
     }
 
     return true;
@@ -31,5 +60,8 @@ const existeUsuarioId = async (id = '') => {
 module.exports = {
     esRolValido,
     esEmailExistente,
-    existeUsuarioId
+    existeUsuarioId,
+    verificarEstado,
+    verificarNombreRepetido,
+    existeDisribuidoraId,
 }

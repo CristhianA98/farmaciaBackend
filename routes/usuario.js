@@ -1,9 +1,10 @@
 const { Router } = require("express");
-const { check } = require('express-validator');
+const { check, param } = require('express-validator');
 
-const { validarCampos } = require("../middlewares");
-const { esRolValido, esEmailExistente, existeUsuarioId } = require("../helpers/db-validator");
+const { validarCampos, validarJWT } = require("../middlewares");
+const { esRolValido, esEmailExistente, existeUsuarioId, verificarEstado } = require("../helpers/db-validator");
 const { obtenerUsuarios, ingresarUsuario, actualizarUsuario, obtenerUsuario, eliminarUsuario } = require('../controllers');
+const { Usuario } = require("../models");
 
 const router = new Router;
 
@@ -13,7 +14,7 @@ router.get('/', obtenerUsuarios);
 //Obtener Usuario
 router.get('/:id', [
     check('id', 'ID incorrecto').isMongoId(),
-    check('id').custom(existeUsuarioId),
+    check('id').custom(id => verificarEstado(id,Usuario)),
     validarCampos
 ], obtenerUsuario);
 
@@ -29,14 +30,17 @@ router.post('/', [
 
 //Actualizar Usuario
 router.put('/:id', [
+    validarJWT,
     check('id', 'ID incorrecto').isMongoId(),
     check('id').custom(existeUsuarioId),
     check('rol').custom(esRolValido),
+    check('id').custom(id => verificarEstado(id,Usuario)),
     validarCampos
 ], actualizarUsuario);
 
 //Eliminar Usuario - Lógicamente
 router.delete('/:id', [
+    validarJWT,
     check('id', 'ID incorrecto').isMongoId(),
     check('id').custom(existeUsuarioId),
     validarCampos
