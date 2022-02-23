@@ -1,4 +1,4 @@
-const { Rol, Usuario, Distribuidora } = require("../models")
+const { Rol, Usuario, Distribuidora, Producto } = require("../models")
 
 const esRolValido = async (rol = '') => {
     const existeRol = await Rol.findOne({ rol });
@@ -30,7 +30,7 @@ const existeUsuarioId = async (id = '') => {
 
 
 const verificarNombreRepetido = async (nombre = '', coleccion) => {
-    const existeNombre = await coleccion.findOne({ nombre: nombre.toUpperCase()});
+    const existeNombre = await coleccion.findOne({ nombre: nombre.toUpperCase() });
     if (existeNombre) {
         throw new Error(`"${nombre}" ya se encuentra registrado`);
     }
@@ -50,8 +50,18 @@ const verificarEstado = async (id, coleccion) => {
 const existeDisribuidoraId = async (id = '') => {
     const existeDistribuidora = await Distribuidora.findById(id);
 
-    if(!existeDistribuidora){
+    if (!existeDistribuidora) {
         throw new Error(`Id "${id}" no pertenece a una distribuidora`);
+    }
+
+    return true;
+}
+
+const existeProductoId = async (id = '') => {
+    const existeProducto = await Producto.findById(id);
+
+    if (!existeProducto) {
+        throw new Error(`Id "${id}" no pertenece a un producto`);
     }
 
     return true;
@@ -64,4 +74,5 @@ module.exports = {
     verificarEstado,
     verificarNombreRepetido,
     existeDisribuidoraId,
+    existeProductoId
 }

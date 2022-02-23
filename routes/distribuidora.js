@@ -13,7 +13,6 @@ router.get('/', obtenerDistribuidoras);
 
 //Obtener Distribuidora
 router.get('/:id', [
-    check('nombre', 'Nombre es obligatorio'),
     check('id', 'ID Incorrecto').isMongoId(),
     check('id').custom(existeDisribuidoraId),
     check('id').custom(id => verificarEstado(id, Distribuidora)),

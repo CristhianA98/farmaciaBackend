@@ -11,9 +11,10 @@ class Server {
 
         //Paths
         this.paths = {
+            auth:'/auth',
             usuarios: '/usuarios',
             distribuidoras: '/distribuidoras',
-            auth:'/auth'
+            productos: '/productos'
         }
 
         //Middlewares
@@ -46,9 +47,10 @@ class Server {
     }
 
     routes() {
+        this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.usuarios, require('../routes/usuario'));
         this.app.use(this.paths.distribuidoras, require('../routes/distribuidora'));
-        this.app.use(this.paths.auth, require('../routes/auth'));
+        this.app.use(this.paths.productos, require('../routes/producto'));
     }
 
     listen() {
